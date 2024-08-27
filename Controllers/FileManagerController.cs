@@ -12,6 +12,22 @@ using System.IO;
 
 namespace EJ2APIServices.Controllers
 {
+    public class FileManagerDirectoryContent1
+    {
+        public Dictionary<string, object> CustomData { get; set; }
+        public FileManagerDirectoryContent[] Data { get; set; }
+        public bool ShowHiddenItems { get; set; }
+        public string SearchString { get; set; }
+        public bool CaseSensitive { get; set; }
+        public string[] RenameFiles { get; set; }
+        public string TargetPath { get; set; }
+        public string Name { get; set; }
+        public string[] Names { get; set; }
+        public string NewName { get; set; }
+        public string Action { get; set; }
+        public string Path { get; set; }
+        public FileManagerDirectoryContent TargetData { get; set; }
+    }
 
     [Route("api/[controller]")]
     [EnableCors("AllowAllOrigins")]
@@ -19,6 +35,7 @@ namespace EJ2APIServices.Controllers
     {
         public PhysicalFileProvider operation;
         public string basePath;
+        string testpath;
         string root = "wwwroot\\Files";
         public FileManagerController(IWebHostEnvironment hostingEnvironment)
         {
@@ -27,8 +44,10 @@ namespace EJ2APIServices.Controllers
             this.operation.RootFolder(this.basePath + "\\" + this.root);
         }
         [Route("FileOperations")]
-        public object FileOperations([FromBody] FileManagerDirectoryContent args)
+        public object FileOperations([FromBody] FileManagerDirectoryContent1 args)
         {
+            testpath = args.CustomData["path"].ToString()!;
+            this.operation.RootFolder(testpath);
             if (args.Action == "delete" || args.Action == "rename")
             {
                 if ((args.TargetPath == null) && (args.Path == ""))
